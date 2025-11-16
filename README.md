@@ -17,6 +17,7 @@ The existing landscape of hydration trackers I've tried are not to my taste, thu
   - unit
   - beverage type?
 - csv data export from sqlite
-- CLI args: updates from command line, csv exports etc
+- Perhaps a prometheus exporter or something for Grafana homelab nerds
+- CLI args: updates from command line, exports etc
 - help/usage menu?
-- On Halloween, water turns into blood
+- On Halloween, water turns into blood (obviously)
