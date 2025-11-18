@@ -12,6 +12,9 @@ use ratatui::{
 };
 use std::io;
 
+mod vertical_gauge;
+use vertical_gauge::VerticalGauge;
+
 fn main() -> io::Result<()> {
     let mut terminal = ratatui::init();
     let app_result = App::default().run(&mut terminal);
@@ -124,7 +127,7 @@ impl Widget for &Meter {
         let clamped_percentage = percentage.clamp(u16::MIN, 100);
         let title = Line::from(percentage.to_string());
 
-        Gauge::default()
+        VerticalGauge::default()
             .block(Block::bordered().title(title.centered()))
             .gauge_style(Style::new().blue().on_light_blue().italic())
             .percent(clamped_percentage)
