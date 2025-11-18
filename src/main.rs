@@ -3,11 +3,12 @@ use crossterm::event::{self, Event, KeyCode, KeyEvent, KeyEventKind};
 use ratatui::{
     DefaultTerminal, Frame,
     buffer::Buffer,
-    layout::Rect,
-    style::Stylize,
+    layout::{Constraint, Direction, Rect},
+    prelude::Layout,
+    style::{Style, Stylize},
     symbols::border,
     text::{Line, Text},
-    widgets::{Block, Paragraph, Widget},
+    widgets::{Block, Gauge, Paragraph, Widget},
 };
 use std::io;
 
@@ -28,6 +29,7 @@ pub struct App {
 impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
         self.water_goal = 128;
+
         while !self.exit {
             terminal.draw(|frame| self.draw(frame))?;
             self.handle_events()?;
@@ -36,7 +38,15 @@ impl App {
     }
 
     fn draw(&self, frame: &mut Frame) {
-        frame.render_widget(self, frame.area());
+        let layout = Layout::default()
+            .direction(Direction::Horizontal)
+            .constraints(vec![Constraint::Percentage(50), Constraint::Percentage(50)])
+            .split(frame.area());
+
+        let meter = Meter::new(self.water_amount, self.water_goal);
+
+        frame.render_widget(&meter, layout[0]);
+        frame.render_widget(self, layout[1]);
     }
 
     fn handle_events(&mut self) -> io::Result<()> {
@@ -67,7 +77,7 @@ impl App {
 
 impl Widget for &App {
     fn render(self, area: Rect, buf: &mut Buffer) {
-        let title = Line::from(" Pint ".bold());
+        let title = Line::from(" Dram ".bold());
         let instructions = Line::from(vec![
             " Drink ".into(),
             "<d>".blue().bold(),
@@ -89,6 +99,35 @@ impl Widget for &App {
         Paragraph::new(water_counter_text)
             .centered()
             .block(block)
+            .render(area, buf);
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct Meter {
+    water_amount: u16,
+    water_goal: u16,
+}
+
+impl Meter {
+    fn new(water_amount: u16, water_goal: u16) -> Self {
+        Self {
+            water_amount,
+            water_goal,
+        }
+    }
+}
+
+impl Widget for &Meter {
+    fn render(self, area: Rect, buf: &mut Buffer) {
+        let percentage = ((self.water_amount as f64 / self.water_goal as f64) * 100.0) as u16;
+        let clamped_percentage = percentage.clamp(u16::MIN, 100);
+        let title = Line::from(percentage.to_string());
+
+        Gauge::default()
+            .block(Block::bordered().title(title.centered()))
+            .gauge_style(Style::new().blue().on_light_blue().italic())
+            .percent(clamped_percentage)
             .render(area, buf);
     }
 }
