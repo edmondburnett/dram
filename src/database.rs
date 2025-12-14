@@ -1,5 +1,7 @@
 use chrono::Utc;
 use rusqlite::{Connection, Result};
+use std::fs;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 #[allow(dead_code)]
@@ -41,12 +43,23 @@ impl Database {
     }
 
     #[allow(dead_code)]
-    pub fn insert_entry(&self, value: i32) -> Result<()> {
+    pub fn insert_entry(&self, value: u16) -> Result<()> {
         let timestamp = Utc::now().timestamp();
         self.conn.execute(
             "INSERT INTO entries (timestamp, value) VALUES  (?1, ?2)",
             [timestamp, value as i64],
         )?;
         Ok(())
+    }
+
+    pub fn get_data_path(app_name: &str) -> std::io::Result<PathBuf> {
+        let base_dir = dirs::data_local_dir()
+            .ok_or_else(|| std::io::Error::new(std::io::ErrorKind::NotFound, "Could not determine data directory"))?;
+
+        let app_dir = base_dir.join(app_name);
+        let _ = fs::create_dir_all(&app_dir);
+        let db_path = app_dir.join(format!("{}.db3", app_name));
+
+        Ok(db_path)
     }
 }

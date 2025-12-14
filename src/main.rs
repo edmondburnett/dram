@@ -12,12 +12,11 @@ use ratatui::{
     widgets::{Block, Gauge, Padding, Paragraph, Widget},
 };
 use rusqlite::{Connection, Result};
-use std::io;
+use std::{env::join_paths, io};
 use std::{fs::File, io::Write};
 
 mod vertical_gauge;
 use vertical_gauge::VerticalGauge;
-
 mod database;
 use database::Database;
 
@@ -39,11 +38,12 @@ impl App {
     pub fn run(&mut self, terminal: &mut DefaultTerminal) -> io::Result<()> {
         self.water_goal = 128;
 
-        let file = File::create("dram.log")?;
+        // TOOD: create a config module
+        let _log_file = File::create("dram.log")?;
 
-        let path = "./mydb.db3";
-        let db = Database::new(path);
-        db.init();
+        let data_dir = Database::get_data_path("dram")?;
+        let db = Database::new(&data_dir.to_string_lossy());
+        let _ = db.init();
 
         while !self.exit {
             terminal.draw(|frame| self.draw(frame))?;
