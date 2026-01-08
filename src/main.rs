@@ -19,6 +19,8 @@ mod vertical_gauge;
 use vertical_gauge::VerticalGauge;
 mod database;
 use database::Database;
+mod beverage;
+use beverage::Beverage;
 
 fn main() -> io::Result<()> {
     let mut terminal = ratatui::init();

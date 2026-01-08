@@ -35,7 +35,8 @@ impl Database {
             "CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             timestamp INTEGER NOT NULL,
-            value INTEGER NOT NULL
+            value INTEGER NOT NULL,
+            type INTEGER NOT NULL
             )",
             [],
         )?;
