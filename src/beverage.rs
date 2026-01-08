@@ -13,6 +13,7 @@ impl Beverage {
     }
 
     pub fn from_code(code: u8) -> Option<Self> {
+        // usage: let code: u8 = Beverage::Coffee.code();
         match code {
             0 => Some(Beverage::Water),
             1 => Some(Beverage::Coffee),

@@ -25,3 +25,4 @@ The existing landscape of hydration trackers I've tried are not to my taste, thu
 - Graph/viz of some kind to show daily hydration history
 - A chart or display that shows some averages or trends over some time period(s).
 - On Halloween, water turns into blood (obviously)
+- Consider [this](https://crates.io/crates/tui-slider)
