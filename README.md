@@ -9,6 +9,8 @@ The existing landscape of hydration trackers I've tried are not to my taste, thu
 - Customizable units (metric + imperial/US)
 - Customizable cup sizes
 - Support for coffee w/adjusted estimated absorption rate
+  - Shown on separate chart perhaps?
+- Another chart and input for reporting dehydration symptoms/side-effects, comparable to hydration intake
 - config file under `~/.config/dram`
 - Store/load updates in sqlite under `~/.local/share/dram/`
   - tz-aware timestamp
